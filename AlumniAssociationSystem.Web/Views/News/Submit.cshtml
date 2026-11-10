@@ -1,0 +1,26 @@
+@model NewsArticle
+@{
+    ViewData["Title"] = "投稿";
+}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white"><strong>✏️ 校友投稿（提交后需管理员审核）</strong></div>
+            <div class="card-body p-4">
+                <form asp-action="Submit" method="post">
+                    <div class="mb-3"><label class="form-label">标题 *</label><input asp-for="Title" class="form-control" /><span asp-validation-for="Title" class="text-danger"></span></div>
+                    <div class="mb-3">
+                        <label class="form-label">分类 *</label>
+                        <select asp-for="Category" class="form-select">
+                            <option value="@NewsCategory.Dynamic">校友动态/风采</option>
+                            <option value="@NewsCategory.Notice">通知公告</option>
+                        </select>
+                    </div>
+                    <div class="mb-3"><label class="form-label">正文 *</label><textarea asp-for="Content" class="form-control" rows="8"></textarea><span asp-validation-for="Content" class="text-danger"></span></div>
+                    <button type="submit" class="btn btn-primary">提交投稿</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

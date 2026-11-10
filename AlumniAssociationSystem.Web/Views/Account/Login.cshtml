@@ -1,0 +1,37 @@
+@{
+    ViewData["Title"] = "登录";
+}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h4 class="mb-3 text-center">校友登录</h4>
+                <form asp-action="Login" method="post">
+                    <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+                    <div class="mb-3">
+                        <label class="form-label">手机号 / 邮箱</label>
+                        <input name="Account" class="form-control" placeholder="请输入手机号或邮箱" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">密码</label>
+                        <input name="Password" type="password" class="form-control" />
+                    </div>
+                    <div class="form-check mb-3">
+                        <input name="RememberMe" type="checkbox" class="form-check-input" id="rm" />
+                        <label class="form-check-label" for="rm">记住我</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">登 录</button>
+                </form>
+                <div class="text-center mt-3">
+                    <a asp-action="Register">没有账号？立即注册</a>
+                </div>
+                <hr />
+                <div class="small text-muted">
+                    <strong>演示账号：</strong><br />
+                    管理员：13800000000 / Admin@123<br />
+                    校友：13900000001 / Alumni@123
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

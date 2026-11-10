@@ -1,0 +1,21 @@
+## .NET 构建产物
+bin/
+obj/
+out/
+publish/
+
+## 数据库文件（首次运行自动生成种子数据）
+*.db
+*.db-shm
+*.db-wal
+
+## IDE
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+
+## 系统文件
+.DS_Store
+Thumbs.db

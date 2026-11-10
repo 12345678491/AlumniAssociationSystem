@@ -1,0 +1,27 @@
+@model AlumniAssociationSystem.Web.Controllers.BroadcastViewModel
+@{
+    ViewData["Title"] = "群发站内信";
+}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white"><strong>📤 群发站内信</strong> <span class="text-muted small">（邮件/短信渠道为预留扩展点）</span></div>
+            <div class="card-body p-4">
+                <form asp-action="Send" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">接收对象</label>
+                        <select asp-for="TargetRole" class="form-select">
+                            <option value="">全部用户</option>
+                            <option value="@UserRole.Alumni">仅校友</option>
+                            <option value="@UserRole.Admin">仅管理员</option>
+                        </select>
+                    </div>
+                    <div class="mb-3"><label class="form-label">标题 *</label><input asp-for="Title" class="form-control" /><span asp-validation-for="Title" class="text-danger"></span></div>
+                    <div class="mb-3"><label class="form-label">内容 *</label><textarea asp-for="Content" class="form-control" rows="6"></textarea><span asp-validation-for="Content" class="text-danger"></span></div>
+                    <button type="submit" class="btn btn-primary">发送</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

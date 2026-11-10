@@ -1,0 +1,34 @@
+@model List<NewsArticle>
+@{
+    ViewData["Title"] = "资讯动态";
+    NewsCategory? category = (NewsCategory?)ViewBag.Category;
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>📰 资讯动态</h2>
+    @if (User.Identity!.IsAuthenticated)
+    {
+        <a class="btn btn-outline-primary" asp-action="Submit">✏️ 我要投稿</a>
+    }
+</div>
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item"><a class="nav-link @(category == null ? "active" : "")" asp-action="Index">全部</a></li>
+    <li class="nav-item"><a class="nav-link @(category == NewsCategory.Notice ? "active" : "")" asp-action="Index" asp-route-category="@NewsCategory.Notice">通知公告</a></li>
+    <li class="nav-item"><a class="nav-link @(category == NewsCategory.Dynamic ? "active" : "")" asp-action="Index" asp-route-category="@NewsCategory.Dynamic">校友动态</a></li>
+</ul>
+<div class="list-group shadow-sm">
+    @foreach (var n in Model)
+    {
+        <a asp-action="Details" asp-route-id="@n.Id" class="list-group-item list-group-item-action">
+            <div class="d-flex justify-content-between">
+                <h6 class="mb-1">
+                    @if (n.IsPinned) { <span class="badge bg-danger me-1">置顶</span> }
+                    @if (n.Category == NewsCategory.Notice) { <span class="badge bg-primary me-1">公告</span> } else { <span class="badge bg-info text-dark me-1">动态</span> }
+                    @n.Title
+                </h6>
+                <small class="text-muted">@n.PublishTime?.ToString("yyyy-MM-dd")</small>
+            </div>
+            <p class="small text-muted mb-0">@n.Author?.Name 发布 · 👀 @n.ViewCount · 👍 @n.LikeCount</p>
+        </a>
+    }
+    @if (!Model.Any()) { <div class="list-group-item text-muted">暂无内容</div> }
+</div>

@@ -1,0 +1,74 @@
+@model AlumniAssociationSystem.Web.Controllers.RegisterViewModel
+@{
+    ViewData["Title"] = "校友注册";
+}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-7">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h4 class="mb-3 text-center">校友注册 <small class="text-muted fs-6">（注册后需管理员审核）</small></h4>
+                <form asp-action="Register" method="post">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">手机号 *</label>
+                            <input asp-for="Phone" class="form-control" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">邮箱</label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">姓名 *</label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">学号 *</label>
+                            <input asp-for="StudentNo" class="form-control" />
+                            <span asp-validation-for="StudentNo" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">毕业年份 *</label>
+                            <input asp-for="GradYear" class="form-control" type="number" />
+                            <span asp-validation-for="GradYear" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">院系 *</label>
+                            <input asp-for="Department" class="form-control" placeholder="如：计算机学院" />
+                            <span asp-validation-for="Department" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">专业 *</label>
+                            <input asp-for="Major" class="form-control" placeholder="如：计算机科学与技术" />
+                            <span asp-validation-for="Major" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">密码 *</label>
+                            <input asp-for="Password" class="form-control" type="password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">确认密码 *</label>
+                            <input asp-for="ConfirmPassword" class="form-control" type="password" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">验证码 *</label>
+                            <div class="input-group">
+                                <input asp-for="VerifyCode" class="form-control" />
+                                <span class="input-group-text bg-warning-subtle fw-bold">演示码：@Model.GeneratedVerifyCode</span>
+                            </div>
+                            <span asp-validation-for="VerifyCode" class="text-danger"></span>
+                            <small class="text-muted">演示模式直接显示验证码；实际部署应通过短信/邮件发送。</small>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">注 册</button>
+                </form>
+                <div class="text-center mt-3"><a asp-action="Login">已有账号？返回登录</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

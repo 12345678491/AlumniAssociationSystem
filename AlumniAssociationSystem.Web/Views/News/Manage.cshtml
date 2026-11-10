@@ -1,0 +1,36 @@
+@model List<NewsArticle>
+@{
+    ViewData["Title"] = "资讯管理";
+}
+<h2>📰 资讯管理</h2>
+<a class="btn btn-primary mb-3" asp-action="Create">➕ 发布资讯</a>
+<table class="table table-hover align-middle shadow-sm bg-white rounded">
+    <thead class="table-light"><tr><th>标题</th><th>分类</th><th>作者</th><th>状态</th><th>操作</th></tr></thead>
+    <tbody>
+        @foreach (var n in Model)
+        {
+            <tr>
+                <td>@n.Title <small class="text-muted">👀@n.ViewCount 👍@n.LikeCount</small></td>
+                <td>@(n.Category == NewsCategory.Notice ? "公告" : "动态")</td>
+                <td>@n.Author?.Name</td>
+                <td>
+                    @switch (n.Status)
+                    {
+                        case PublishStatus.Pending: <span class="badge bg-warning text-dark">待审核</span> break;
+                        case PublishStatus.Published: <span class="badge bg-success">已发布</span> break;
+                        case PublishStatus.Rejected: <span class="badge bg-danger">已驳回</span> break;
+                    }
+                </td>
+                <td>
+                    @if (n.Status != PublishStatus.Published)
+                    {
+                        <form asp-action="Audit" method="post" class="d-inline"><input type="hidden" name="id" value="@n.Id" /><input type="hidden" name="status" value="Published" /><button class="btn btn-sm btn-success">通过</button></form>
+                        <form asp-action="Audit" method="post" class="d-inline"><input type="hidden" name="id" value="@n.Id" /><input type="hidden" name="status" value="Rejected" /><button class="btn btn-sm btn-outline-danger">驳回</button></form>
+                    }
+                    <form asp-action="TogglePinned" method="post" class="d-inline"><input type="hidden" name="id" value="@n.Id" /><button class="btn btn-sm btn-outline-warning">@(n.IsPinned ? "取消置顶" : "置顶")</button></form>
+                    <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('确定删除？')"><input type="hidden" name="id" value="@n.Id" /><button class="btn btn-sm btn-danger">删除</button></form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

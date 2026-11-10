@@ -1,0 +1,46 @@
+@model AlumniAssociationSystem.Web.Controllers.DonateViewModel
+@{
+    ViewData["Title"] = "在线捐赠";
+    var project = (DonationProject)ViewBag.Project;
+}
+<div class="row justify-content-center mt-3">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white"><strong>❤️ 向「@project.Title」捐赠</strong></div>
+            <div class="card-body p-4">
+                <form asp-action="Donate" method="post">
+                    <input type="hidden" name="id" value="@project.Id" />
+                    <div class="mb-3"><label class="form-label">捐赠人姓名 *</label><input asp-for="DonorName" class="form-control" /><span asp-validation-for="DonorName" class="text-danger"></span></div>
+                    <div class="mb-3">
+                        <label class="form-label">捐赠金额（元） *</label>
+                        <input asp-for="Amount" class="form-control" type="number" step="0.01" min="0.01" />
+                        <div class="mt-2">
+                            @foreach (var amt in new[] { 100, 500, 1000, 5000 })
+                            {
+                                <button type="button" class="btn btn-sm btn-outline-success me-1 amt-btn" data-amt="@amt">¥@amt</button>
+                            }
+                        </div>
+                        <span asp-validation-for="Amount" class="text-danger"></span>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input asp-for="IsAnonymous" class="form-check-input" />
+                        <label class="form-check-label" asp-for="IsAnonymous"></label>
+                    </div>
+                    <div class="mb-3"><label class="form-label">捐赠留言</label><textarea asp-for="Message" class="form-control" rows="2"></textarea></div>
+                    <div class="alert alert-info small">💳 支付方式：本系统演示环境下模拟第三方支付网关（点击捐赠即视为支付成功回调）。实际部署时对接微信支付/支付宝等网关。</div>
+                    <button type="submit" class="btn btn-success w-100">确认捐赠</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.querySelectorAll('.amt-btn').forEach(function (b) {
+            b.addEventListener('click', function () {
+                document.getElementById('Amount').value = b.dataset.amt;
+            });
+        });
+    </script>
+}

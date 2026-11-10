@@ -1,0 +1,31 @@
+@model List<JobPosting>
+@{
+    ViewData["Title"] = "招聘信息";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>💼 校友招聘</h2>
+    @if (User.Identity!.IsAuthenticated)
+    {
+        <a class="btn btn-outline-primary" asp-action="Post">➕ 发布职位</a>
+    }
+</div>
+<p class="text-muted">搭建校友企业与在校生/校友之间的职业桥梁。已认证校友可发布职位，管理员审核通过后展示。</p>
+<div class="row g-4">
+    @foreach (var j in Model)
+    {
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title"><a asp-action="Details" asp-route-id="@j.Id" class="text-decoration-none">@j.Title</a></h5>
+                    <p class="text-muted small mb-1">🏢 @j.CompanyName　📍 @j.Location　💰 @j.Salary</p>
+                    <p class="card-text small mb-0">要求：@(j.Requirements.Length > 60 ? j.Requirements[..60] + "…" : j.Requirements)</p>
+                </div>
+                <div class="card-footer bg-white">
+                    <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@j.Id">查看详情</a>
+                    <a class="btn btn-sm btn-outline-primary" asp-action="Apply" asp-route-id="@j.Id">投递简历</a>
+                </div>
+            </div>
+        </div>
+    }
+    @if (!Model.Any()) { <p class="text-muted">暂无职位信息</p> }
+</div>

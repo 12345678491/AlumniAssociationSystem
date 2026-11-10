@@ -1,0 +1,29 @@
+@model List<Event>
+@{
+    ViewData["Title"] = "校友活动";
+}
+<h2>🎯 校友活动</h2>
+<p class="text-muted">从策划、报名、签到到复盘的全流程闭环管理。</p>
+<div class="row g-4">
+    @foreach (var e in Model)
+    {
+        var joined = e.Registrations.Count(r => r.Status == RegistrationStatus.Registered);
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title"><a asp-action="Details" asp-route-id="@e.Id" class="text-decoration-none">@e.Title</a></h5>
+                    <p class="card-text text-muted small mb-1">📍 @e.Location　🕘 @e.StartTime.ToString("yyyy-MM-dd HH:mm") ~ @e.EndTime.ToString("HH:mm")</p>
+                    <p class="card-text small">@e.Description</p>
+                </div>
+                <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                    <small class="text-muted">报名 @joined/@e.Capacity 人 ｜ 截止 @e.Deadline.ToString("MM-dd")</small>
+                    <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@e.Id">查看详情 / 报名</a>
+                </div>
+            </div>
+        </div>
+    }
+    @if (!Model.Any())
+    {
+        <p class="text-muted">暂无活动，敬请期待。</p>
+    }
+</div>

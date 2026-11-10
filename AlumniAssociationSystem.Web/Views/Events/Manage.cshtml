@@ -1,0 +1,40 @@
+@model List<Event>
+@{
+    ViewData["Title"] = "活动管理";
+}
+<h2>🎯 活动管理</h2>
+<a class="btn btn-primary mb-3" asp-action="Create">➕ 创建活动</a>
+<table class="table table-hover align-middle shadow-sm bg-white rounded">
+    <thead class="table-light"><tr><th>#</th><th>活动名称</th><th>时间</th><th>报名</th><th>状态</th><th>操作</th></tr></thead>
+    <tbody>
+        @foreach (var e in Model)
+        {
+            <tr>
+                <td>@e.Id</td>
+                <td><a asp-action="Details" asp-route-id="@e.Id">@e.Title</a></td>
+                <td>@e.StartTime.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@e.Registrations.Count(r => r.Status == RegistrationStatus.Registered)/@e.Capacity</td>
+                <td>
+                    @switch (e.Status)
+                    {
+                        case EventStatus.PendingApproval: <span class="badge bg-warning text-dark">待审核</span> break;
+                        case EventStatus.Published: <span class="badge bg-success">已发布</span> break;
+                        case EventStatus.Finished: <span class="badge bg-secondary">已结束</span> break;
+                        case EventStatus.Rejected: <span class="badge bg-danger">已驳回</span> break;
+                    }
+                </td>
+                <td>
+                    @if (e.Status != EventStatus.Published)
+                    {
+                        <form asp-action="Audit" method="post" class="d-inline"><input type="hidden" name="id" value="@e.Id" /><input type="hidden" name="status" value="Published" /><button class="btn btn-sm btn-success">发布</button></form>
+                    }
+                    else
+                    {
+                        <form asp-action="Audit" method="post" class="d-inline"><input type="hidden" name="id" value="@e.Id" /><input type="hidden" name="status" value="Finished" /><button class="btn btn-sm btn-outline-secondary">结束</button></form>
+                    }
+                    <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('确定删除该活动？')"><input type="hidden" name="id" value="@e.Id" /><button class="btn btn-sm btn-danger">删除</button></form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

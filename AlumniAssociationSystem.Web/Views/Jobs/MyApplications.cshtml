@@ -1,0 +1,30 @@
+@model List<JobApplication>
+@{
+    ViewData["Title"] = "我的投递";
+}
+<h2>📨 我的投递记录</h2>
+<table class="table table-hover shadow-sm bg-white rounded">
+    <thead class="table-light"><tr><th>职位</th><th>公司</th><th>简历摘要</th><th>进度</th><th>投递时间</th></tr></thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td><a asp-action="Details" asp-route-id="@a.JobPostingId">@a.JobPosting?.Title</a></td>
+                <td>@a.JobPosting?.CompanyName</td>
+                <td><small>@(a.ResumeSummary.Length > 40 ? a.ResumeSummary[..40] + "…" : a.ResumeSummary)</small></td>
+                <td>
+                    @switch (a.Status)
+                    {
+                        case ApplicationStatus.Sent: <span class="badge bg-primary">已投递</span> break;
+                        case ApplicationStatus.Reviewed: <span class="badge bg-info text-dark">已查阅</span> break;
+                        case ApplicationStatus.Interview: <span class="badge bg-warning text-dark">约面试</span> break;
+                        case ApplicationStatus.Offer: <span class="badge bg-success">Offer</span> break;
+                        case ApplicationStatus.Rejected: <span class="badge bg-secondary">不合适</span> break;
+                    }
+                </td>
+                <td class="text-muted">@a.CreatedAt.ToString("yyyy-MM-dd")</td>
+            </tr>
+        }
+        @if (!Model.Any()) { <tr><td colspan="5" class="text-muted">暂无投递记录</td></tr> }
+    </tbody>
+</table>

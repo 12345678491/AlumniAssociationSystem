@@ -1,0 +1,30 @@
+@model List<DonationProject>
+@{
+    ViewData["Title"] = "捐赠专区";
+}
+<h2>❤️ 捐赠专区</h2>
+<p class="text-muted">每一份捐赠都将用于母校建设与学子成长，流程透明、合规公示。</p>
+<div class="row g-4">
+    @foreach (var p in Model)
+    {
+        var raised = p.Records.Where(r => r.IsPaid).Sum(r => r.Amount);
+        var pct = p.TargetAmount > 0 ? (int)(raised * 100 / p.TargetAmount) : 0;
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">@p.Title
+                        @if (p.Status == ProjectStatus.Closed) { <span class="badge bg-secondary">已结束</span> }
+                    </h5>
+                    <p class="card-text small text-muted">@p.Description</p>
+                    <div class="progress" style="height:8px"><div class="progress-bar bg-success" style="width:@(Math.Min(pct,100))%"></div></div>
+                    <p class="small mt-2 mb-0">已募集 <strong class="text-success">¥@raised.ToString("N0")</strong> / 目标 ¥@p.TargetAmount.ToString("N0")（@pct%）</p>
+                    <p class="small text-muted mb-0">@p.Records.Count(r => r.IsPaid) 人参与捐赠</p>
+                </div>
+                <div class="card-footer bg-white">
+                    <a class="btn btn-sm btn-success @(p.Status == ProjectStatus.Closed ? "disabled" : "")" asp-action="Donate" asp-route-id="@p.Id">我要捐赠</a>
+                    <a class="btn btn-sm btn-outline-secondary" asp-action="Details" asp-route-id="@p.Id">项目详情</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

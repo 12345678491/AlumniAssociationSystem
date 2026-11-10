@@ -1,0 +1,25 @@
+@model List<Message>
+@{
+    ViewData["Title"] = "消息中心";
+    var unread = (int)ViewBag.UnreadCount;
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>📩 消息中心 <span class="badge bg-danger">@unread 条未读</span></h2>
+    @if (User.IsInRole(nameof(UserRole.Admin)))
+    {
+        <a class="btn btn-outline-primary" asp-action="Send">📤 群发站内信</a>
+    }
+</div>
+<div class="list-group shadow-sm">
+    @foreach (var m in Model)
+    {
+        <a asp-action="Details" asp-route-id="@m.Id" class="list-group-item list-group-item-action @(m.IsRead ? "" : "fw-bold")">
+            <div class="d-flex justify-content-between">
+                <span>@(m.IsRead ? "" : "🔵 ")@m.Title</span>
+                <small class="text-muted fw-normal">@m.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small>
+            </div>
+            <p class="small text-muted mb-0 fw-normal">@(m.Content.Length > 60 ? m.Content[..60] + "…" : m.Content)</p>
+        </a>
+    }
+    @if (!Model.Any()) { <div class="list-group-item text-muted">暂无消息</div> }
+</div>

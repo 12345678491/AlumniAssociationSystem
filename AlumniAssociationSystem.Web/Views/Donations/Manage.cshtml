@@ -1,0 +1,31 @@
+@model List<DonationProject>
+@{
+    ViewData["Title"] = "捐赠项目管理";
+}
+<h2>❤️ 捐赠项目管理</h2>
+<a class="btn btn-primary mb-3" asp-action="Create">➕ 创建项目</a>
+<table class="table table-hover align-middle shadow-sm bg-white rounded">
+    <thead class="table-light"><tr><th>项目</th><th>目标金额</th><th>已募集</th><th>状态</th><th>操作</th></tr></thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            var raised = p.Records.Where(r => r.IsPaid).Sum(r => r.Amount);
+            <tr>
+                <td>@p.Title</td>
+                <td>¥@p.TargetAmount.ToString("N0")</td>
+                <td class="text-success">¥@raised.ToString("N0")</td>
+                <td>@(p.Status == ProjectStatus.Active ? "进行中" : "已结束")</td>
+                <td>
+                    <form asp-action="ToggleStatus" method="post" class="d-inline">
+                        <input type="hidden" name="id" value="@p.Id" />
+                        <button class="btn btn-sm btn-outline-secondary">@(p.Status == ProjectStatus.Active ? "下架" : "上架")</button>
+                    </form>
+                    <form asp-action="Delete" method="post" class="d-inline" onsubmit="return confirm('确定删除该项目？')">
+                        <input type="hidden" name="id" value="@p.Id" />
+                        <button class="btn btn-sm btn-danger">删除</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

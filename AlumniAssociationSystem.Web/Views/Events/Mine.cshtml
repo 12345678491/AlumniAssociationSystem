@@ -1,0 +1,37 @@
+@model List<EventRegistration>
+@{
+    ViewData["Title"] = "我的报名";
+}
+<h2>📅 我的报名</h2>
+<table class="table table-hover align-middle shadow-sm bg-white rounded">
+    <thead class="table-light"><tr><th>活动</th><th>时间</th><th>地点</th><th>状态</th><th>操作</th></tr></thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td><a asp-action="Details" asp-route-id="@r.EventId">@r.Event?.Title</a></td>
+                <td>@r.Event?.StartTime.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@r.Event?.Location</td>
+                <td>
+                    @if (r.Status == RegistrationStatus.Registered) { <span class="badge bg-primary">已报名</span> }
+                    else if (r.Status == RegistrationStatus.CheckedIn) { <span class="badge bg-success">已签到 @r.CheckInTime?.ToString("HH:mm")</span> }
+                    else { <span class="badge bg-secondary">已取消</span> }
+                </td>
+                <td>
+                    @if (r.Status == RegistrationStatus.Registered)
+                    {
+                        <form asp-action="CheckIn" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@r.Id" />
+                            <button type="submit" class="btn btn-sm btn-success">签到</button>
+                        </form>
+                        <form asp-action="Cancel" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@r.Id" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">取消报名</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+        @if (!Model.Any()) { <tr><td colspan="5" class="text-muted">暂无报名记录</td></tr> }
+    </tbody>
+</table>

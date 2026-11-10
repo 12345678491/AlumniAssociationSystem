@@ -1,0 +1,21 @@
+@model List<DonationRecord>
+@{
+    ViewData["Title"] = "我的捐赠";
+}
+<h2>🧾 我的捐赠记录</h2>
+<table class="table table-hover shadow-sm bg-white rounded">
+    <thead class="table-light"><tr><th>项目</th><th>金额</th><th>状态</th><th>留言</th><th>时间</th></tr></thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td><a asp-action="Details" asp-route-id="@r.ProjectId">@r.Project?.Title</a></td>
+                <td class="text-success">¥@r.Amount.ToString("N0")</td>
+                <td>@if (r.IsPaid) { <span class="badge bg-success">支付成功</span> } else { <span class="badge bg-warning">待支付</span> }</td>
+                <td>@r.Message</td>
+                <td class="text-muted">@r.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+            </tr>
+        }
+        @if (!Model.Any()) { <tr><td colspan="5" class="text-muted">暂无捐赠记录</td></tr> }
+    </tbody>
+</table>

@@ -1,0 +1,81 @@
+@model AlumniAssociationSystem.Web.Controllers.DashboardViewModel
+@{
+    ViewData["Title"] = "数据看板";
+    var maxDay = Model.NewUsersByDay.Any() ? (double)Model.NewUsersByDay.Max(d => d.Count) : 1;
+}
+<h2>📊 数据统计分析看板</h2>
+<div class="row g-3 mb-4">
+    @foreach (var (label, value, icon, cls) in new (string, string, string, string)[]
+    {
+        ("注册用户", Model.TotalUsers.ToString(), "👥", "primary"),
+        ("待审核用户", Model.PendingUsers.ToString(), "⏳", "warning"),
+        ("认证校友", Model.ApprovedAlumni.ToString(), "🎓", "info"),
+        ("活动总数", Model.TotalEvents.ToString(), "🎯", "success"),
+        ("进行中活动", Model.ActiveEvents.ToString(), "📢", "success"),
+        ("活动报名人次", Model.TotalRegistrations.ToString(), "📝", "secondary"),
+        ("捐赠总额", "¥" + Model.TotalDonationAmount.ToString("N0"), "❤️", "danger"),
+        ("捐赠笔数", Model.DonationCount.ToString(), "🧾", "danger"),
+        ("待审资讯", Model.PendingNews.ToString(), "📰", "warning"),
+        ("待审职位", Model.PendingJobs.ToString(), "💼", "warning"),
+        ("投递简历", Model.TotalApplications.ToString(), "📨", "secondary"),
+        ("未读站内信", Model.UnreadMessages.ToString(), "📩", "info"),
+    })
+    {
+        <div class="col-md-3 col-6">
+            <div class="card border-@(cls) h-100">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div><div class="text-muted small">@icon @label</div><div class="fs-4 fw-bold">@value</div></div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white"><strong>近30天新增用户趋势</strong></div>
+            <div class="card-body">
+                @if (!Model.NewUsersByDay.Any()) { <p class="text-muted">暂无数据</p> }
+                else
+                {
+                    <div class="d-flex align-items-end gap-1" style="height:120px">
+                        @foreach (var d in Model.NewUsersByDay.OrderBy(d => d.Date))
+                        {
+                            var h = (int)(d.Count / maxDay * 100);
+                            <div class="flex-fill text-center" title="@d.Date:yyyy-MM-dd：@d.Count 人">
+                                <div class="bg-primary rounded-top mx-auto" style="width:100%;height:@Math.Max(h,4)px"></div>
+                                <div class="small text-muted" style="font-size:10px">@d.Date.ToString("M/dd")</div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white"><strong>快捷入口</strong></div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    @if (Model.PendingUsers > 0)
+                    {
+                        <a class="btn btn-warning" asp-action="Users">⏳ 审核 @Model.PendingUsers 位待审核用户</a>
+                    }
+                    @if (Model.PendingNews > 0)
+                    {
+                        <a class="btn btn-outline-primary" asp-controller="News" asp-action="Manage">📰 审核 @Model.PendingNews 篇待发布资讯</a>
+                    }
+                    @if (Model.PendingJobs > 0)
+                    {
+                        <a class="btn btn-outline-primary" asp-controller="Jobs" asp-action="Manage">💼 审核 @Model.PendingJobs 条待发布职位</a>
+                    }
+                    <a class="btn btn-outline-secondary" asp-controller="Events" asp-action="Manage">🎯 活动管理</a>
+                    <a class="btn btn-outline-secondary" asp-controller="Donations" asp-action="Manage">❤️ 捐赠项目管理</a>
+                    <a class="btn btn-outline-secondary" asp-controller="Messages" asp-action="Send">📤 群发站内信</a>
+                    <a class="btn btn-outline-secondary" asp-action="Logs">📜 操作日志</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

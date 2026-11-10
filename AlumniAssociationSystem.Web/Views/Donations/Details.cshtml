@@ -1,0 +1,43 @@
+@model DonationProject
+@{
+    ViewData["Title"] = Model.Title;
+    var raised = Model.Records.Where(r => r.IsPaid).Sum(r => r.Amount);
+    var pct = Model.TargetAmount > 0 ? (int)(raised * 100 / Model.TargetAmount) : 0;
+}
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h3>❤️ @Model.Title</h3>
+                <div class="progress my-3" style="height:10px"><div class="progress-bar bg-success" style="width:@(Math.Min(pct,100))%"></div></div>
+                <p>已募集 <strong class="text-success fs-5">¥@raised.ToString("N0")</strong> / 目标 ¥@Model.TargetAmount.ToString("N0")（@pct%）· @Model.Records.Count(r => r.IsPaid) 人参与</p>
+                <div class="p-3 bg-light rounded">@Html.Raw(Model.Description.Replace("\n", "<br/>"))</div>
+            </div>
+            @if (Model.Status == ProjectStatus.Active)
+            {
+                <div class="card-footer bg-white p-3">
+                    <a class="btn btn-success" asp-action="Donate" asp-route-id="@Model.Id">我要捐赠</a>
+                </div>
+            }
+        </div>
+
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-white"><strong>捐赠明细（合规公示）</strong></div>
+            <table class="table table-sm mb-0">
+                <thead class="table-light"><tr><th>捐赠人</th><th>金额</th><th>留言</th><th>时间</th></tr></thead>
+                <tbody>
+                    @foreach (var r in (List<DonationRecord>)ViewBag.Donors)
+                    {
+                        <tr>
+                            <td>@(r.IsAnonymous ? "爱心人士" : r.DonorName)</td>
+                            <td class="text-success">¥@r.Amount.ToString("N0")</td>
+                            <td>@r.Message</td>
+                            <td class="text-muted">@r.CreatedAt.ToString("yyyy-MM-dd")</td>
+                        </tr>
+                    }
+                    @if (!((List<DonationRecord>)ViewBag.Donors).Any()) { <tr><td colspan="4" class="text-muted">暂无捐赠记录</td></tr> }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

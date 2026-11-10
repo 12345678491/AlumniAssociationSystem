@@ -1,0 +1,30 @@
+@model AlumniAssociationSystem.Web.Models.AlumniProfile
+@{
+    ViewData["Title"] = "我的资料";
+}
+<div class="row justify-content-center mt-3">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white"><strong>👤 我的校友资料</strong> <span class="text-muted small">（校友信息全生命周期维护）</span></div>
+            <div class="card-body p-4">
+                <form asp-action="Profile" method="post">
+                    <input type="hidden" asp-for="UserId" />
+                    <div class="row">
+                        <div class="col-md-6 mb-3"><label class="form-label">姓名 *</label><input asp-for="Name" class="form-control" /><span asp-validation-for="Name" class="text-danger"></span></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">学号 *</label><input asp-for="StudentNo" class="form-control" /></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">毕业年份 *</label><input asp-for="GradYear" class="form-control" type="number" /></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">院系 *</label><input asp-for="Department" class="form-control" /></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">专业 *</label><input asp-for="Major" class="form-control" /></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">所在行业</label><input asp-for="Industry" class="form-control" /></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">所在城市</label><input asp-for="City" class="form-control" /></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">工作单位</label><input asp-for="Company" class="form-control" /></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">职务</label><input asp-for="Position" class="form-control" /></div>
+                        <div class="col-12 mb-3"><label class="form-label">个人简介</label><textarea asp-for="Bio" class="form-control" rows="3"></textarea></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">保存修改</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

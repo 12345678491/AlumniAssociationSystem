@@ -1,0 +1,24 @@
+@model JobPosting
+@{
+    ViewData["Title"] = Model.Title;
+}
+<div class="row justify-content-center">
+    <div class="col-md-9">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h3>@Model.Title</h3>
+                <p class="text-muted">🏢 @Model.CompanyName　📍 @Model.Location　💰 @Model.Salary　🕐 @Model.PublishTime?.ToString("yyyy-MM-dd") 发布</p>
+                <hr />
+                <h5>岗位职责</h5>
+                <p class="lh-lg">@Html.Raw(Model.Responsibilities.Replace("\n", "<br/>"))</p>
+                <h5>任职要求</h5>
+                <p class="lh-lg">@Html.Raw(Model.Requirements.Replace("\n", "<br/>"))</p>
+                <h5>联系方式</h5>
+                <p>@Model.Contact</p>
+            </div>
+            <div class="card-footer bg-white p-3">
+                <a class="btn btn-primary" asp-action="Apply" asp-route-id="@Model.Id">📨 投递简历</a>
+            </div>
+        </div>
+    </div>
+</div>

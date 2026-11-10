@@ -1,0 +1,29 @@
+@model List<JobPosting>
+@{
+    ViewData["Title"] = "我发布的职位";
+}
+<h2>📋 我发布的职位</h2>
+<table class="table table-hover align-middle shadow-sm bg-white rounded">
+    <thead class="table-light"><tr><th>职位</th><th>公司</th><th>薪资</th><th>状态</th><th>投递数</th><th>发布时间</th></tr></thead>
+    <tbody>
+        @foreach (var j in Model)
+        {
+            <tr>
+                <td><a asp-action="Details" asp-route-id="@j.Id">@j.Title</a></td>
+                <td>@j.CompanyName</td>
+                <td>@j.Salary</td>
+                <td>
+                    @switch (j.Status)
+                    {
+                        case JobStatus.Pending: <span class="badge bg-warning text-dark">待审核</span> break;
+                        case JobStatus.Approved: <span class="badge bg-success">已上架</span> break;
+                        case JobStatus.Rejected: <span class="badge bg-danger">已驳回</span> break;
+                    }
+                </td>
+                <td>@j.Applications.Count</td>
+                <td class="text-muted">@(j.PublishTime?.ToString("yyyy-MM-dd") ?? "未发布")</td>
+            </tr>
+        }
+        @if (!Model.Any()) { <tr><td colspan="6" class="text-muted">暂无发布记录，<a asp-action="Post">去发布职位</a></td></tr> }
+    </tbody>
+</table>

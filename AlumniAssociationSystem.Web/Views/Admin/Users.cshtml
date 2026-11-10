@@ -1,0 +1,38 @@
+@model List<User>
+@{
+    ViewData["Title"] = "用户管理";
+    var profiles = (Dictionary<int, AlumniProfile>)ViewBag.Profiles;
+}
+<h2>👥 用户审核与管理</h2>
+<p class="text-muted">注册采用「自助注册 + 审核」机制，确保校友身份真实。</p>
+<table class="table table-hover align-middle shadow-sm bg-white rounded">
+    <thead class="table-light"><tr><th>ID</th><th>姓名</th><th>手机号</th><th>院系 / 届别</th><th>角色</th><th>状态</th><th>操作</th></tr></thead>
+    <tbody>
+        @foreach (var u in Model)
+        {
+            var p = profiles.GetValueOrDefault(u.Id);
+            <tr>
+                <td>@u.Id</td>
+                <td>@u.Name</td>
+                <td>@u.Phone</td>
+                <td><small>@p?.Department / @p?.GradYear 届 @p?.Major</small></td>
+                <td>@(u.Role == UserRole.Admin ? "管理员" : "校友")</td>
+                <td>
+                    @switch (u.Status)
+                    {
+                        case UserStatus.Pending: <span class="badge bg-warning text-dark">待审核</span> break;
+                        case UserStatus.Approved: <span class="badge bg-success">已通过</span> break;
+                        case UserStatus.Rejected: <span class="badge bg-danger">已驳回</span> break;
+                    }
+                </td>
+                <td>
+                    @if (u.Status == UserStatus.Pending)
+                    {
+                        <form asp-action="AuditUser" method="post" class="d-inline"><input type="hidden" name="id" value="@u.Id" /><input type="hidden" name="status" value="Approved" /><button class="btn btn-sm btn-success">通过</button></form>
+                        <form asp-action="AuditUser" method="post" class="d-inline"><input type="hidden" name="id" value="@u.Id" /><input type="hidden" name="status" value="Rejected" /><button class="btn btn-sm btn-outline-danger">驳回</button></form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

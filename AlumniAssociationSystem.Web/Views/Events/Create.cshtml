@@ -1,0 +1,27 @@
+@model Event
+@{
+    ViewData["Title"] = "创建活动";
+}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white"><strong>➕ 创建活动</strong></div>
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post">
+                    <div class="mb-3"><label class="form-label">活动名称 *</label><input asp-for="Title" class="form-control" /><span asp-validation-for="Title" class="text-danger"></span></div>
+                    <div class="mb-3"><label class="form-label">活动详情</label><textarea asp-for="Description" class="form-control" rows="4"></textarea></div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3"><label class="form-label">地点 *</label><input asp-for="Location" class="form-control" /><span asp-validation-for="Location" class="text-danger"></span></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">人数上限 *</label><input asp-for="Capacity" class="form-control" type="number" /></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">开始时间 *</label><input asp-for="StartTime" class="form-control" type="datetime-local" value="@DateTime.Now.AddDays(7).ToString("yyyy-MM-ddTHH:mm")" /></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">结束时间 *</label><input asp-for="EndTime" class="form-control" type="datetime-local" value="@DateTime.Now.AddDays(7).AddHours(2).ToString("yyyy-MM-ddTHH:mm")" /></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">报名截止时间 *</label><input asp-for="Deadline" class="form-control" type="datetime-local" value="@DateTime.Now.AddDays(5).ToString("yyyy-MM-ddTHH:mm")" /></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">创建并发布</button>
+                    <a class="btn btn-outline-secondary" asp-action="Manage">返回</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

@@ -1,0 +1,83 @@
+﻿@{
+    ViewData["Title"] = "首页";
+    var notices = (List<NewsArticle>)ViewBag.Notices;
+    var events = (List<Event>)ViewBag.Events;
+    var projects = (List<DonationProject>)ViewBag.Projects;
+    var jobs = (List<JobPosting>)ViewBag.Jobs;
+}
+<div class="p-5 mb-4 bg-light rounded-3 border-bottom">
+    <div class="container-fluid py-4">
+        <h1 class="display-5 fw-bold">欢迎来到校友会管理系统</h1>
+        <p class="col-md-8 fs-5 text-muted">
+            连接校友 · 服务校友 · 反哺母校。已有 <strong>@ViewBag.AlumniCount</strong> 位校友加入我们。
+            系统支持校友注册审核、活动报名、在线捐赠、资讯发布与招聘信息对接。
+        </p>
+        <a class="btn btn-primary btn-lg" asp-controller="Account" asp-action="Register">校友注册</a>
+        <a class="btn btn-outline-secondary btn-lg ms-2" asp-controller="Events" asp-action="Index">查看活动</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header bg-white"><strong>📢 最新公告</strong></div>
+            <ul class="list-group list-group-flush">
+                @foreach (var n in notices)
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>
+                            @if (n.IsPinned) { <span class="badge bg-danger me-1">置顶</span> }
+                            <a asp-controller="News" asp-action="Details" asp-route-id="@n.Id">@n.Title</a>
+                        </span>
+                        <small class="text-muted">@n.PublishTime?.ToString("MM-dd")</small>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header bg-white"><strong>🎯 近期活动</strong> <a class="float-end small" asp-controller="Events" asp-action="Index">更多 »</a></div>
+            <ul class="list-group list-group-flush">
+                @foreach (var e in events)
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span><a asp-controller="Events" asp-action="Details" asp-route-id="@e.Id">@e.Title</a></span>
+                        <small class="text-muted">@e.StartTime.ToString("MM-dd HH:mm")</small>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header bg-white"><strong>❤️ 捐赠专区</strong> <a class="float-end small" asp-controller="Donations" asp-action="Index">更多 »</a></div>
+            <ul class="list-group list-group-flush">
+                @foreach (var p in projects)
+                {
+                    var raised = p.Records.Where(r => r.IsPaid).Sum(r => r.Amount);
+                    var pct = p.TargetAmount > 0 ? (int)(raised * 100 / p.TargetAmount) : 0;
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between"><a asp-controller="Donations" asp-action="Details" asp-route-id="@p.Id">@p.Title</a><small>已达 @pct%</small></div>
+                        <div class="progress mt-1" style="height:6px"><div class="progress-bar bg-success" style="width:@(Math.Min(pct,100))%"></div></div>
+                        <small class="text-muted">已募集 ¥@raised.ToString("N0") / 目标 ¥@p.TargetAmount.ToString("N0")</small>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header bg-white"><strong>💼 校友招聘</strong> <a class="float-end small" asp-controller="Jobs" asp-action="Index">更多 »</a></div>
+            <ul class="list-group list-group-flush">
+                @foreach (var j in jobs)
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span><a asp-controller="Jobs" asp-action="Details" asp-route-id="@j.Id">@j.Title</a> <small class="text-muted">- @j.CompanyName</small></span>
+                        <small class="text-muted">@j.Salary</small>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
