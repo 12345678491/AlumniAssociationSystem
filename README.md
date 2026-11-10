@@ -2,6 +2,15 @@
 
 依据《基于.NET的校友会系统_业务流程与模块划分.docx》实现的完整可运行系统。
 
+## 部署到公网（GitHub + Render 免费方案）
+
+1. 把本仓库推送到 GitHub；
+2. 登录 [Render](https://render.com)（支持 .NET/Docker，有免费实例）；
+3. New → Blueprint → 绑定本 GitHub 仓库，Render 会读取 `render.yaml` 自动构建 Docker 镜像并启动；
+4. 部署完成后 Render 会分配公网地址（如 `https://alumni-association-system.onrender.com`），任何人可访问。
+
+> 注意：Render 免费实例使用临时磁盘，重新部署后 SQLite 数据会重置（演示场景无影响）；15 分钟无访问会休眠，首次访问需等待约 30~60 秒冷启动。
+
 ## 技术栈
 
 - **开发环境**：Visual Studio 2026（或 VS 2022 17.12+ / VS Code + dotnet CLI）

@@ -1,0 +1,11 @@
+# Render 一键部署配置（https://render.com）
+# 推送到 GitHub 后，在 Render 控制台选择 New → Blueprint，绑定本仓库即可自动创建服务
+services:
+  - type: web
+    name: alumni-association-system
+    runtime: docker
+    plan: free
+    healthCheckPath: /
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
